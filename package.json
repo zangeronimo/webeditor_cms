@@ -8,10 +8,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "local:base": "webpack-dev-server --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "local:base": "webpack-dev-server --config webpack.dev.cjs",
+    "build": "webpack --config webpack.prod.cjs",
     "dev": "yarn local:base --stats-error-details --open",
-    "test": "cross-env NODE_ICU_DATA=node_modules/full-icu jest --passWithNoTests --no-cache --runInBand",
+    "test": "cross-env jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "yarn test --watch",
     "test:staged": "yarn test --findRelatedTests",
     "test:ci": "yarn test --coverage",

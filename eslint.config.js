@@ -154,7 +154,7 @@ export default [
       'build/',
       'coverage/',
 
-      'webpack.*.js',
+      'webpack.*.cjs',
       'jest.config.*',
       'commitlint.config.*',
       'eslint.config.*',

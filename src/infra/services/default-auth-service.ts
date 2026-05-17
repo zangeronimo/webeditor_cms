@@ -1,13 +1,10 @@
+import { AuthService } from '@application/contracts/auth-service';
 import { HttpClient } from '@application/contracts/http-client';
-import { Storage } from '@application/contracts/storage';
 import { LoginRequest } from '@application/requests/use-cases/login-request';
 
-export class AuthService {
+export class DefaultAuthService implements AuthService {
   private readonly _baseUrl: string;
-  constructor(
-    private readonly http: HttpClient,
-    private readonly storage: Storage,
-  ) {
+  constructor(private readonly http: HttpClient) {
     this._baseUrl = process.env.API_URL!;
   }
 
@@ -28,11 +25,7 @@ export class AuthService {
         },
       },
     );
-    this.storage.set('accessToken', response.token);
-
-    setTimeout(() => {
-      this.refresh();
-    }, 5000);
+    return response.token ?? null;
   }
 
   async refresh() {
@@ -47,6 +40,6 @@ export class AuthService {
         },
       },
     );
-    this.storage.set('accessToken', response.token);
+    return response.token ?? null;
   }
 }

@@ -1,6 +1,7 @@
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { LoginPage } from '@presentation/pages/login/login-page';
 import { I18nProvider } from '../../../core/i18n/presentation/i18n-provider';
+import { AuthProvider } from '@presentation/auth/auth-provider';
 
 describe('LoginPage (i18n aware)', () => {
   const makeStorage = (locale: 'en-US' | 'pt-BR') => ({
@@ -13,21 +14,24 @@ describe('LoginPage (i18n aware)', () => {
   });
 
   const makeSut = (locale: 'en-US' | 'pt-BR') => {
-    const execute = jest.fn().mockResolvedValue(undefined);
+    const login = jest.fn().mockResolvedValue(undefined);
 
-    const loginUser = {
-      execute,
+    const authService = {
+      login,
+      refresh: jest.fn(),
     };
 
     const storage = makeStorage(locale);
 
     render(
       <I18nProvider storage={storage as any}>
-        <LoginPage loginUser={loginUser as any} />
+        <AuthProvider storage={storage as any} authService={authService}>
+          <LoginPage />
+        </AuthProvider>
       </I18nProvider>,
     );
 
-    return { execute };
+    return { login };
   };
 
   it('should render UI in English', async () => {
@@ -46,8 +50,8 @@ describe('LoginPage (i18n aware)', () => {
     expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
   });
 
-  it('should call LoginUser on click', async () => {
-    const { execute } = makeSut('pt-BR');
+  it('should call Login on click', async () => {
+    const { login } = makeSut('pt-BR');
 
     fireEvent.change(screen.getByPlaceholderText(/e-mail/i), {
       target: { value: 'test@test.com' },
@@ -60,7 +64,7 @@ describe('LoginPage (i18n aware)', () => {
     fireEvent.click(screen.getByRole('button', { name: /entrar/i }));
 
     await waitFor(() => {
-      expect(execute).toHaveBeenCalledWith({
+      expect(login).toHaveBeenCalledWith({
         email: 'test@test.com',
         password: '123456',
       });

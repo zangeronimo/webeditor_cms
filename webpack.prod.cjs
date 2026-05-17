@@ -52,6 +52,14 @@ module.exports = merge(common, {
     }),
     new FaviconsWebpackPlugin({
       logo: './public/favicon.png',
+      icons: {
+        favicons: true,
+        appleIcon: true,
+        appleStartup: false,
+        android: false,
+        windows: false,
+        yandex: false,
+      },
     }),
   ],
 });
